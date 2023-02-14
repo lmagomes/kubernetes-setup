@@ -1,0 +1,19 @@
+---
+- hosts: controllers
+  tasks:
+    - name: Add helm repository
+      shell: helm repo add firefly-iii https://firefly-iii.github.io/kubernetes
+    - name: Update repo
+      shell: helm repo update
+    - name: Copy resources to controler
+      copy:
+        src: resources/
+        dest: /tmp/resources
+    - name: Create the secret
+      shell: kubectl -n home-services apply -f /tmp/resources/secret-firefly-config.json
+    - name: Install the firefly helm chart
+      shell: helm -n home-services install firefly-iii firefly-iii/firefly-iii --values=/tmp/resources/values.yaml
+    - name: Remove resources
+      file:
+        state: absent 
+        path: /tmp/resources/

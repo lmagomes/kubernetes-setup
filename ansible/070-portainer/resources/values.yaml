@@ -1,0 +1,15 @@
+
+ingress:
+  enabled: true
+  hosts:
+    - host: portainer.domu.casa
+      paths:
+        - path: "/"
+  tls:
+    - hosts:
+        - portainer.domu.casa
+      secretName: portainer-domu-casa-tls
+
+persistence:
+  enabled: true
+  size: "2Gi"

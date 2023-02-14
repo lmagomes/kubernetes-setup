@@ -1,0 +1,16 @@
+config:
+  # -- Set this to the name of a secret to load environment variables from. If defined, values in the secret will override values in config.env
+  existingSecret: "firefly-database-credentials"
+env:
+    TZ: "Europe/Lisbon"
+
+ingress:
+  enabled: true
+  hosts:
+    - firefly.domu.casa
+  paths:
+    - path: "/"
+  tls:
+     - hosts:
+         - firefly.domu.casa
+       secretName: domu-casa-tls

@@ -1,0 +1,20 @@
+---
+
+- hosts: controllers
+  tasks:
+    - name: create traefik namespace
+      shell: kubectl create namespace traefik
+    - name: Add helm repository
+      shell: helm repo add traefik https://traefik.github.io/charts
+    - name: Update repo
+      shell: helm repo update
+    - name: Copy resources to controler
+      copy:
+        src: traefik/
+        dest: /tmp/traefik
+    - name: Install the traefik helm chart
+      shell: helm install --namespace=traefik traefik traefik/traefik --values=/tmp/traefik/values.yaml
+    - name: Remove resources
+      file:
+        state: absent
+        path: /tmp/traefik/

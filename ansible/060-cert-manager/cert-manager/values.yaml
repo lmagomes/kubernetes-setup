@@ -1,0 +1,19 @@
+installCRDs: false
+replicaCount: 1
+
+# Additional command line flags to pass to cert-manager controller binary.
+# To see all available flags run docker run quay.io/jetstack/cert-manager-controller:<version> --help
+extraArgs: 
+  - --dns01-recursive-nameservers=1.1.1.1:53,9.9.9.9:53
+  - --dns01-recursive-nameservers-only
+
+# Optional DNS settings, useful if you have a public and private DNS zone for
+# the same domain on Route 53. What follows is an example of ensuring
+# cert-manager can access an ingress or DNS TXT records at all times.
+# NOTE: This requires Kubernetes 1.10 or `CustomPodDNS` feature gate enabled for
+# the cluster to work.
+podDnsPolicy: None
+podDnsConfig:
+  nameservers:
+    - "1.1.1.1"
+    - "9.9.9.9"

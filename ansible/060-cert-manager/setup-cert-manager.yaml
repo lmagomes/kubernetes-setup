@@ -1,0 +1,29 @@
+---
+
+- hosts: controllers
+  tasks:
+    - name: create cert-manager namespace
+      shell: kubectl create namespace cert-manager
+    - name: Apply custom resource definitions
+      shell: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+    - name: Add helm repository
+      shell: helm repo add jetstack https://charts.jetstack.io
+    - name: Update repo
+      shell: helm repo update
+    - name: Copy resources to controler
+      copy:
+        src: cert-manager/
+        dest: /tmp/cert-manager
+    - name: Install the cert-manager helm chart
+      shell: helm install --namespace cert-manager cert-manager jetstack/cert-manager --version v1.11.0 --values=/tmp/cert-manager/values.yaml
+    - name: Add the cloudflare's API token secret
+      shell: kubectl -n cert-manager apply -f /tmp/cert-manager/secret-cloudflare-token.json
+    # - name: Create staging letsencrypt issuer
+    #   shell: kubectl -n cert-manager apply -f /tmp/cert-manager/staging/letsencrypt-issuer.yaml
+    - name: Create production letsencrypt issuer
+      shell: kubectl -n cert-manager apply -f /tmp/cert-manager/production/letsencrypt-issuer.yaml
+
+    - name: Remove resources
+      file:
+        state: absent
+        path: /tmp/cert-manager/

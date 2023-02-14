@@ -1,0 +1,18 @@
+---
+
+- hosts: controllers
+  tasks:
+    - name: Apply metallb manifest
+      shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-frr.yaml
+    - name: Copy resources to controler
+      copy:
+        src: metallb/
+        dest: /tmp/metallb
+    - name: Apply address pool definition
+      shell: kubectl -n metallb-system apply -f /tmp/metallb/address-pool.yaml
+    - name: Apply layer2 advertisement
+      shell: kubectl -n metallb-system apply -f /tmp/metallb/layer2-advertisement.yaml
+    - name: Remove resources
+      file:
+        state: absent
+        path: /tmp/metallb/

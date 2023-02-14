@@ -1,0 +1,13 @@
+
+nfs:
+  server: nas.domu.casa
+  path: /export/kubernetes
+
+# For creating the StorageClass automatically:
+storageClass:
+  create: true
+  # Set StorageClass as the default StorageClass
+  # Ignored if storageClass.create is false
+  defaultClass: true
+  # Set access mode - ReadWriteOnce, ReadOnlyMany or ReadWriteMany
+  accessModes: ReadOnlyMany

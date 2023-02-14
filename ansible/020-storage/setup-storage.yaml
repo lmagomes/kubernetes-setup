@@ -1,0 +1,18 @@
+---
+
+- hosts: controllers
+  tasks:
+    - name: Add helm repository
+      shell: helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+    - name: Update repo
+      shell: helm repo update
+    - name: Copy resources to controler
+      copy:
+        src: resources/
+        dest: /tmp/resources
+    - name: Install the nfs external provisioner   helm chart
+      shell: helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --values=/tmp/resources/values.yaml
+    - name: Remove resources
+      file:
+        state: absent
+        path: /tmp/resources/

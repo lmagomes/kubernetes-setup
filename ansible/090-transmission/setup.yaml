@@ -1,0 +1,17 @@
+---
+- hosts: controllers
+  tasks:
+    - name: Add helm repository
+      shell: helm repo add geek-cookbook https://geek-cookbook.github.io/charts/
+    - name: Update repo
+      shell: helm repo update
+    - name: Copy resources to controler
+      copy:
+        src: resources/
+        dest: /tmp/resources
+    - name: Install the transmission helm chart
+      shell: helm -n home-services install transmission geek-cookbook/transmission --values=/tmp/resources/values.yaml
+    - name: Remove resources
+      file:
+        state: absent 
+        path: /tmp/resources/

@@ -15,27 +15,6 @@
   - name: Install the Flannel overlay network
     shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
   
-  - name: Install k9s
-    block:
-      - name: download k9s
-        shell: |
-          wget -q https://github.com/derailed/k9s/releases/download/$(curl --silent "https://api.github.com/repos/derailed/k9s/releases/latest" | jq -r .tag_name)/k9s_Linux_amd64.tar.gz  -P /tmp/
-          tar xf /tmp/k9s_Linux_amd64.tar.gz -C /tmp k9s
-      - name: Move binary to bin folder
-        become: yes
-        copy:
-          remote_src: True
-          src: /tmp/k9s
-          dest: /usr/local/bin/k9s
-          mode: '0755'
-      - name: Remove downloaded files
-        file:
-          path: "{{ item }}"
-          state: absent
-        with_items:
-          - /tmp/k9s
-          - /tmp/k9s_Linux_amd64.tar.gz 
-
   - name: Get join command from controller
     become: yes
     shell: kubeadm token create --print-join-command

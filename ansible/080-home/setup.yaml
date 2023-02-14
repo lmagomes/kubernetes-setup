@@ -1,0 +1,15 @@
+---
+- hosts: controllers
+  tasks:
+    - name: create home services namespace
+      shell: kubectl create namespace home-services
+    - name: Copy resources to controler
+      copy:
+        src: resources/
+        dest: /tmp/resources
+    - name: Create let's encrypt certificate
+      shell: kubectl apply -f /tmp/resources/wildcard-certificate.yaml
+    - name: Remove resources
+      file:
+        state: absent
+        path: /tmp/resources/

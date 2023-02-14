@@ -1,0 +1,9 @@
+---
+
+- hosts: controllers
+  tasks:
+  - name: Install k9s
+    shell: |
+      wget -q https://github.com/derailed/k9s/releases/download/$(curl --silent "https://api.github.com/repos/derailed/k9s/releases/latest" | jq -r .tag_name)/k9s_Linux_amd64.tar.gz  -P /tmp/
+      tar xf /tmp/k9s_Linux_amd64.tar.gz k9s
+      sudo install -m 755 k9s /usr/local/bin/k9s

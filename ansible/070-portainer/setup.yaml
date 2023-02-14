@@ -1,0 +1,21 @@
+---
+- hosts: controllers
+  tasks:
+    - name: create portainer namespace
+      shell: kubectl create namespace portainer
+    - name: Add helm repository
+      shell: helm repo add portainer https://portainer.github.io/k8s/
+    - name: Update repo
+      shell: helm repo update
+    - name: Copy resources to controler
+      copy:
+        src: resources/
+        dest: /tmp/resources
+    - name: Create let's encrypt certificate
+      shell: kubectl apply -f /tmp/resources/portainer-certificate.yaml
+    - name: Install the portainer helm chart
+      shell: helm upgrade -i -n portainer portainer portainer/portainer --values=/tmp/resources/values.yaml
+    - name: Remove resources
+      file:
+        state: absent
+        path: /tmp/resources/

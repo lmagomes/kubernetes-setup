@@ -19,6 +19,8 @@ autoinstall:
     - gnupg
     - lsb-release
     - nfs-common
+    - apache2-utils
+    - python3-kubernetes
   storage:
     layout:
       name: direct
